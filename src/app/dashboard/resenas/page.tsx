@@ -119,11 +119,11 @@ export default function ResenasPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Reseñas</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Reseñas</h1>
         <button
           onClick={() => setMostrarCarga(!mostrarCarga)}
-          className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition"
+          className="flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Cargar reseña manual

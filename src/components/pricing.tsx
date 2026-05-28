@@ -107,18 +107,18 @@ export default function Pricing() {
 
   return (
     <section className="max-w-6xl mx-auto px-4 pb-10">
-      <h2 className="text-3xl font-bold text-center text-gray-900 mb-2">Planes para cada negocio</h2>
-      <p className="text-center text-gray-500 mb-12">
+      <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-2">Planes para cada negocio</h2>
+      <p className="text-center text-gray-500 mb-8 sm:mb-12 text-sm sm:text-base">
         Todos los precios en {moneda}{" "}
         <span className="text-xs text-gray-400">(detectado automáticamente)</span>
       </p>
 
-      <div className="grid md:grid-cols-3 gap-8 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
         {planes.map((p) => (
           <div
             key={p.nombre}
-            className={`bg-white p-8 rounded-xl border flex flex-col ${
-              p.destacado ? "ring-2 ring-primary-500 shadow-lg md:scale-105" : "shadow-sm"
+            className={`bg-white p-6 sm:p-8 rounded-xl border flex flex-col ${
+              p.destacado ? "ring-2 ring-primary-500 shadow-lg lg:scale-105" : "shadow-sm"
             }`}
           >
             {p.destacado && (
@@ -126,8 +126,8 @@ export default function Pricing() {
                 Más popular
               </p>
             )}
-            <h3 className="text-xl font-bold text-gray-900 text-center">{p.nombre}</h3>
-            <p className="text-4xl font-bold text-gray-900 mt-3 text-center">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900 text-center">{p.nombre}</h3>
+            <p className="text-3xl sm:text-4xl font-bold text-gray-900 mt-3 text-center">
               {p.precio === 0 ? (
                 "Gratis"
               ) : (

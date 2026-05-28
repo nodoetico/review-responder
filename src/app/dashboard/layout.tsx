@@ -1,6 +1,3 @@
-// ============================================================
-// Layout del dashboard (lado del cliente con autenticacion)
-// ============================================================
 "use client"
 
 import { useEffect, useState } from "react"
@@ -8,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import { crearClienteBrowser } from "@/lib/supabase-client"
 import type { User } from "@supabase/supabase-js"
-import { Store, MessageSquare, Settings, LogOut, Home } from "lucide-react"
+import { Store, MessageSquare, Settings, LogOut, Home, Menu, X } from "lucide-react"
 import Image from "next/image"
 
 const navItems = [
@@ -20,6 +17,7 @@ const navItems = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [sidebarAbierta, setSidebarAbierta] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
 
@@ -34,6 +32,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     })
   }, [router])
 
+  useEffect(() => { setSidebarAbierta(false) }, [pathname])
+
   const handleLogout = async () => {
     const supabase = crearClienteBrowser()
     await supabase.auth.signOut()
@@ -42,39 +42,70 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (!user) return null
 
+  const Sidebar = () => (
+    <aside className="bg-gray-900 text-white p-6 flex flex-col h-full">
+      <div className="flex items-center justify-between mb-8">
+        <Image src="/logo-blanco.png" alt="Replivo" width={140} height={140} className="rounded-lg w-20 sm:w-24 lg:w-[140px] h-auto" />
+        <button onClick={() => setSidebarAbierta(false)} className="lg:hidden text-gray-400 hover:text-white">
+          <X className="w-6 h-6" />
+        </button>
+      </div>
+      <nav className="flex-1 space-y-1">
+        {navItems.map((item) => {
+          const Icon = item.icon
+          const activo = pathname === item.href
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg transition ${
+                activo ? "bg-primary-600 text-white" : "text-gray-300 hover:bg-gray-800"
+              }`}
+            >
+              <Icon className="w-5 h-5 shrink-0" />
+              {item.label}
+            </Link>
+          )
+        })}
+      </nav>
+      <button
+        onClick={handleLogout}
+        className="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white transition mt-auto"
+      >
+        <LogOut className="w-5 h-5 shrink-0" />
+        Cerrar sesión
+      </button>
+    </aside>
+  )
+
   return (
     <div className="min-h-screen flex">
-      <aside className="w-64 bg-gray-900 text-white p-6 flex flex-col">
-        <div className="flex items-center gap-3 mb-8">
-          <Image src="/logo-blanco.png" alt="Replivo" width={100} height={100} className="rounded-lg w-16 sm:w-20 md:w-[100px] h-auto" />
+      {/* Sidebar desktop */}
+      <div className="hidden lg:flex lg:w-64 shrink-0">
+        <Sidebar />
+      </div>
+
+      {/* Sidebar mobile overlay */}
+      {sidebarAbierta && (
+        <div className="fixed inset-0 z-50 flex lg:hidden">
+          <div className="fixed inset-0 bg-black/50" onClick={() => setSidebarAbierta(false)} />
+          <div className="relative w-64 max-w-[80vw]">
+            <Sidebar />
+          </div>
         </div>
-        <nav className="flex-1 space-y-1">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            const activo = pathname === item.href
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition ${
-                  activo ? "bg-primary-600 text-white" : "text-gray-300 hover:bg-gray-800"
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                {item.label}
-              </Link>
-            )
-          })}
-        </nav>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white transition mt-auto"
-        >
-          <LogOut className="w-5 h-5" />
-          Cerrar sesión
-        </button>
-      </aside>
-      <main className="flex-1 bg-gray-50 p-8 overflow-y-auto">{children}</main>
+      )}
+
+      <main className="flex-1 bg-gray-50 min-w-0">
+        {/* Mobile top bar */}
+        <div className="lg:hidden flex items-center gap-3 bg-white border-b px-4 py-3 sticky top-0 z-40">
+          <button onClick={() => setSidebarAbierta(true)} className="text-gray-600 hover:text-gray-900">
+            <Menu className="w-6 h-6" />
+          </button>
+          <Image src="/logo-blanco.png" alt="Replivo" width={32} height={32} className="rounded-lg invert" />
+          <span className="font-semibold text-gray-900">Replivo</span>
+        </div>
+        <div className="p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</div>
+      </main>
     </div>
   )
 }
