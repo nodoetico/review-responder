@@ -27,6 +27,7 @@ export default function ResenasPage() {
   const [rating, setRating] = useState(5)
   const [textoResena, setTextoResena] = useState("")
   const [cargandoIA, setCargandoIA] = useState(false)
+  const [errorIA, setErrorIA] = useState("")
 
   const supabase = crearClienteBrowser()
 
@@ -78,6 +79,7 @@ export default function ResenasPage() {
     const localNombre = locales.find((l) => l.id === localSeleccionado)?.nombre ?? ""
 
     let respuesta = ""
+    setErrorIA("")
     try {
       const res = await fetch("/api/generar-respuesta", {
         method: "POST",
@@ -85,9 +87,14 @@ export default function ResenasPage() {
         body: JSON.stringify({ autor, rating, texto: textoResena, nombre_local: localNombre }),
       })
       const json = await res.json()
+      if (!res.ok) {
+        throw new Error(json.error || `Error ${res.status}`)
+      }
       respuesta = json.respuesta
-    } catch {
-      respuesta = `Gracias por tu reseña, ${autor}. Valoramos tu opinión.`
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Error desconocido"
+      setErrorIA(`Error con la IA: ${msg}. Se usó respuesta genérica.`)
+      respuesta = `Gracias por tu reseña, ${autor}. Valoramos tu opinión y trabajamos para mejorar cada día.`
     }
 
     await supabase.from("resenas").insert({
@@ -167,6 +174,7 @@ export default function ResenasPage() {
             className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition disabled:opacity-50">
             {cargandoIA ? "Generando respuesta con IA..." : "Cargar y generar respuesta"}
           </button>
+          {errorIA && <p className="text-red-500 text-sm mt-2">{errorIA}</p>}
         </form>
       )}
 

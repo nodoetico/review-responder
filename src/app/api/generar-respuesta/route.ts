@@ -16,7 +16,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ respuesta })
   } catch (err) {
-    console.error("Error generando respuesta:", err)
-    return NextResponse.json({ error: "Error generando respuesta" }, { status: 500 })
+    const msg = err instanceof Error ? err.message : "Error desconocido"
+    console.error("Error generando respuesta con Groq:", msg)
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }
