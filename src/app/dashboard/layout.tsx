@@ -101,8 +101,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <button onClick={() => setSidebarAbierta(true)} className="text-gray-600 hover:text-gray-900">
             <Menu className="w-6 h-6" />
           </button>
-          <Image src="/logo-blanco.png" alt="Replivo" width={32} height={32} className="rounded-lg invert" />
-          <span className="font-semibold text-gray-900">Replivo</span>
+          <Image src="/logo-blanco.png" alt="Replivo" width={40} height={40} className="rounded-lg invert" />
         </div>
         <div className="p-4 sm:p-6 lg:p-8 overflow-y-auto">{children}</div>
       </main>
