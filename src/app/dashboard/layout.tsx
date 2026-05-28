@@ -46,7 +46,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen flex">
       <aside className="w-64 bg-gray-900 text-white p-6 flex flex-col">
         <div className="flex items-center gap-3 mb-8">
-          <Image src="/logo-blanco.png" alt="Replivo" width={70} height={70} className="rounded-lg" />
+          <Image src="/logo-blanco.png" alt="Replivo" width={85} height={85} className="rounded-lg" />
         </div>
         <nav className="flex-1 space-y-1">
           {navItems.map((item) => {
