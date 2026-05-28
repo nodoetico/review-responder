@@ -12,7 +12,7 @@ export default function LandingPage() {
       <header className="border-b">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Image src="/logo.png" alt="Replivo" width={110} height={110} className="rounded-lg" />
+            <Image src="/logo.png" alt="Replivo" width={150} height={150} className="rounded-lg w-24 sm:w-32 md:w-[150px] h-auto" />
           </div>
           <div className="flex gap-3">
             <Link href="/login" className="text-gray-600 hover:text-gray-900 px-4 py-2">
