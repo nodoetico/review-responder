@@ -55,8 +55,29 @@ export default function Pricing() {
   const [factor, setFactor] = useState(1)
 
   useEffect(() => {
-    const lang = navigator.language || "en-US"
-    const pais = lang.split("-").pop()?.toUpperCase()
+    // Detectar país por zona horaria (más preciso que navigator.language)
+    let pais = "US"
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+      if (tz.includes("Buenos_Aires") || tz.includes("Argentina") || tz.includes("Cordoba")) pais = "AR"
+      else if (tz.includes("Mexico")) pais = "MX"
+      else if (tz.includes("Bogota")) pais = "CO"
+      else if (tz.includes("Santiago")) pais = "CL"
+      else if (tz.includes("Lima")) pais = "PE"
+      else if (tz.includes("Sao_Paulo") || tz.includes("Brasilia")) pais = "BR"
+      else if (tz.includes("Madrid") || tz.includes("Europe")) pais = "ES"
+      else if (tz.includes("New_York") || tz.includes("Chicago") || tz.includes("Los_Angeles") || tz.includes("America") || tz.includes("US")) pais = "US"
+      else {
+        // Fallback a navigator.language
+        const lang = navigator.language || "en-US"
+        const langPais = lang.split("-").pop()?.toUpperCase()
+        if (langPais && langPais.length === 2) pais = langPais
+      }
+    } catch {
+      const lang = navigator.language || "en-US"
+      const langPais = lang.split("-").pop()?.toUpperCase()
+      if (langPais && langPais.length === 2) pais = langPais
+    }
 
     // Mapeo de países a monedas
     const mapa: Record<string, { codigo: string; simbolo: string; factor: number }> = {
