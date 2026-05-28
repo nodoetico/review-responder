@@ -9,6 +9,7 @@ import Link from "next/link"
 import { crearClienteBrowser } from "@/lib/supabase-client"
 import type { User } from "@supabase/supabase-js"
 import { Store, MessageSquare, Settings, LogOut, Home } from "lucide-react"
+import Image from "next/image"
 
 const navItems = [
   { href: "/dashboard", label: "Inicio", icon: Home },
@@ -44,7 +45,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="min-h-screen flex">
       <aside className="w-64 bg-gray-900 text-white p-6 flex flex-col">
-        <h2 className="text-lg font-bold mb-8">Review Responder</h2>
+        <div className="flex items-center gap-3 mb-8">
+          <Image src="/logo.png" alt="Replivo" width={32} height={32} className="rounded-lg" />
+          <h2 className="text-lg font-bold">Replivo</h2>
+        </div>
         <nav className="flex-1 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon

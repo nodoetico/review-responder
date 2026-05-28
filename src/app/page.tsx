@@ -3,13 +3,17 @@
 // Muestra el producto, beneficios y CTA para registrarse
 // ============================================================
 import Link from "next/link"
+import Image from "next/image"
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       <header className="border-b">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-primary-600">Review Responder</h1>
+          <div className="flex items-center gap-3">
+            <Image src="/logo.png" alt="Replivo" width={40} height={40} className="rounded-lg" />
+            <h1 className="text-xl font-bold text-primary-600">Replivo</h1>
+          </div>
           <div className="flex gap-3">
             <Link href="/login" className="text-gray-600 hover:text-gray-900 px-4 py-2">
               Iniciar sesión
@@ -66,7 +70,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="border-t py-8 text-center text-sm text-gray-400">
-        © 2024 Review Responder. Todos los derechos reservados.
+        © 2024 Replivo. Todos los derechos reservados.
       </footer>
     </div>
   )

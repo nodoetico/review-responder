@@ -5,7 +5,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Review Responder - Respondé reseñas automáticamente",
+  title: "Replivo - Respondé reseñas automáticamente",
   description: "Nunca más pierdas clientes por no responder reseñas. Respondemos automáticamente por vos.",
 }
 
