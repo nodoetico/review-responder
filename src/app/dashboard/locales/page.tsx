@@ -69,7 +69,7 @@ export default function LocalesPage() {
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mis locales</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Mis locales</h1>
         <button
           onClick={() => setMostrarForm(!mostrarForm)}
           className="flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition w-full sm:w-auto"
@@ -80,34 +80,34 @@ export default function LocalesPage() {
       </div>
 
       {mostrarForm && (
-        <form onSubmit={agregarLocal} className="bg-white p-6 rounded-xl shadow-sm border mb-8">
-          <h2 className="font-semibold text-gray-900 mb-4">Nuevo local</h2>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Nombre del negocio</label>
+        <form onSubmit={agregarLocal} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 mb-8">
+          <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Nuevo local</h2>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre del negocio</label>
           <input
             type="text"
             required
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             placeholder="Ej: Pizzería La Nueva"
           />
-          <label className="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Dirección</label>
           <input
             type="text"
             required
             value={direccion}
             onChange={(e) => setDireccion(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             placeholder="Ej: Av. Siempreviva 742"
           />
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Google Place ID <span className="text-gray-400 font-normal">(opcional — para escaneo automático)</span>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Google Place ID <span className="text-gray-400 dark:text-gray-500 font-normal">(opcional — para escaneo automático)</span>
           </label>
           <input
             type="text"
             value={googlePlaceId}
             onChange={(e) => setGooglePlaceId(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             placeholder="Ej: ChIJN1t_tDeuEmsRUsoyG83frY4"
           />
           <button
@@ -127,15 +127,15 @@ export default function LocalesPage() {
       ) : (
         <div className="space-y-4">
           {locales.map((local) => (
-            <div key={local.id} className="bg-white p-5 rounded-xl shadow-sm border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <h3 className="font-semibold text-gray-900">{local.nombre}</h3>
-                  <p className="text-sm text-gray-500">{local.direccion}</p>
+            <div key={local.id} className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-white">{local.nombre}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{local.direccion}</p>
                   {local.rating_actual && (
                     <p className="text-sm text-yellow-600">★ {local.rating_actual.toFixed(1)}</p>
                   )}
                   {local.google_place_id === "pendiente" && (
-                    <p className="text-xs text-gray-400 mt-1">⏳ Sin Place ID — cargá reseñas manualmente</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">⏳ Sin Place ID — cargá reseñas manualmente</p>
                   )}
                 </div>
               <button

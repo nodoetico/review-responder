@@ -1,8 +1,6 @@
-// ============================================================
-// Layout principal de la aplicacion
-// ============================================================
 import type { Metadata } from "next"
 import "./globals.css"
+import { TemaProvider } from "@/components/tema-provider"
 
 export const metadata: Metadata = {
   title: "Replivo - Respondé reseñas automáticamente",
@@ -11,8 +9,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
-      <body className="antialiased">{children}</body>
+    <html lang="es" suppressHydrationWarning>
+      <body className="antialiased">
+        <TemaProvider>{children}</TemaProvider>
+      </body>
     </html>
   )
 }

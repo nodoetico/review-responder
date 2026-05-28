@@ -120,7 +120,7 @@ export default function ResenasPage() {
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Reseñas</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Reseñas</h1>
         <button
           onClick={() => setMostrarCarga(!mostrarCarga)}
           className="flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition w-full sm:w-auto"
@@ -131,18 +131,18 @@ export default function ResenasPage() {
       </div>
 
       {mostrarCarga && (
-        <form onSubmit={cargarResenaManual} className="bg-white p-6 rounded-xl shadow-sm border mb-8">
-          <h2 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+        <form onSubmit={cargarResenaManual} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 mb-8">
+          <h2 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-yellow-500" />
             Cargar reseña manual (se genera respuesta automática con IA)
           </h2>
 
-          <label className="block text-sm font-medium text-gray-700 mb-1">Local</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Local</label>
           <select
             required
             value={localSeleccionado}
             onChange={(e) => setLocalSeleccionado(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2 mb-4"
+            className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 mb-4 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
             <option value="">Seleccionar local...</option>
             {locales.map((l) => <option key={l.id} value={l.id}>{l.nombre}</option>)}
@@ -150,14 +150,14 @@ export default function ResenasPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nombre del cliente</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre del cliente</label>
               <input type="text" required value={autor} onChange={(e) => setAutor(e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 mb-4" placeholder="Ej: Juan Pérez" />
+                className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 mb-4 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="Ej: Juan Pérez" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Rating (1-5)</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rating (1-5)</label>
               <select value={rating} onChange={(e) => setRating(Number(e.target.value))}
-                className="w-full border rounded-lg px-3 py-2 mb-4">
+                className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 mb-4 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                 {[5, 4, 3, 2, 1].map((n) => (
                   <option key={n} value={n}>{n} estrella{n > 1 ? "s" : ""}</option>
                 ))}
@@ -165,9 +165,9 @@ export default function ResenasPage() {
             </div>
           </div>
 
-          <label className="block text-sm font-medium text-gray-700 mb-1">Texto de la reseña</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Texto de la reseña</label>
           <textarea required value={textoResena} onChange={(e) => setTextoResena(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2 mb-4" rows={3}
+            className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 mb-4 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" rows={3}
             placeholder="Pegá acá el texto de la reseña..." />
 
           <button type="submit" disabled={cargandoIA}
@@ -179,29 +179,29 @@ export default function ResenasPage() {
       )}
 
       {resenas.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border p-8 text-center text-gray-500">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 p-8 text-center text-gray-500 dark:text-gray-400">
           No hay reseñas todavía. Cargá la primera manualmente con el botón "Cargar reseña manual".
         </div>
       ) : (
         <div className="space-y-4">
           {resenas.map((r) => (
-            <div key={r.id} className="bg-white p-5 rounded-xl shadow-sm border">
+            <div key={r.id} className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border dark:border-gray-700">
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <p className="text-sm text-primary-600 font-medium">{r.local_nombre}</p>
-                  <p className="font-semibold text-gray-900">{r.autor}</p>
+                  <p className="text-sm text-primary-600 dark:text-primary-400 font-medium">{r.local_nombre}</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">{r.autor}</p>
                   <p className="text-yellow-500 text-sm">{renderStars(r.rating)}</p>
                 </div>
               </div>
-              <p className="text-gray-700 mb-3">&quot;{r.texto}&quot;</p>
+              <p className="text-gray-700 dark:text-gray-300 mb-3">&quot;{r.texto}&quot;</p>
 
               {r.respuesta_generada && !r.respondida && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <p className="text-sm font-medium text-blue-800 mb-2">Respuesta generada por IA:</p>
+                <div className="bg-blue-50 dark:bg-blue-900/30 border dark:border-blue-800 border-blue-200 rounded-lg p-4">
+                  <p className="text-sm font-medium text-blue-800 dark:text-blue-300 mb-2">Respuesta generada por IA:</p>
                   {editandoId === r.id ? (
                     <div>
                       <textarea value={textoEditado} onChange={(e) => setTextoEditado(e.target.value)}
-                        className="w-full border rounded-lg p-2 text-sm mb-2" rows={3} />
+                        className="w-full border dark:border-gray-600 rounded-lg p-2 text-sm mb-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" rows={3} />
                       <div className="flex gap-2">
                         <button onClick={() => guardarEditado(r.id)}
                           className="bg-primary-600 text-white px-4 py-1.5 rounded text-sm hover:bg-primary-700 transition">Guardar</button>
@@ -211,7 +211,7 @@ export default function ResenasPage() {
                     </div>
                   ) : (
                     <div>
-                      <p className="text-gray-700 text-sm mb-3">{r.respuesta_generada}</p>
+                      <p className="text-gray-700 dark:text-gray-300 text-sm mb-3">{r.respuesta_generada}</p>
                       <div className="flex gap-2">
                         <button onClick={() => aprobarRespuesta(r.id)}
                           className="bg-green-600 text-white px-4 py-1.5 rounded text-sm hover:bg-green-700 transition">Aprobar</button>
@@ -226,9 +226,9 @@ export default function ResenasPage() {
               )}
 
               {r.respondida && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <p className="text-sm text-green-800 font-medium">✓ Respuesta aprobada</p>
-                  <p className="text-gray-700 text-sm mt-1">{r.respuesta_generada}</p>
+                <div className="bg-green-50 dark:bg-green-900/30 border dark:border-green-800 border-green-200 rounded-lg p-4">
+                  <p className="text-sm text-green-800 dark:text-green-300 font-medium">✓ Respuesta aprobada</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm mt-1">{r.respuesta_generada}</p>
                 </div>
               )}
             </div>

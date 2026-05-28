@@ -5,17 +5,19 @@
 import Link from "next/link"
 import Image from "next/image"
 import Pricing from "@/components/pricing"
+import BotonTema from "@/components/boton-tema"
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-      <header className="border-b">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
+      <header className="border-b dark:border-gray-800">
         <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4 flex items-center justify-between gap-2">
           <div className="flex items-center gap-3 shrink-0">
-            <Image src="/logo.png" alt="Replivo" width={170} height={170} className="rounded-lg w-20 sm:w-28 lg:w-[170px] h-auto" />
+            <Image src="/logo.png" alt="Replivo" width={170} height={170} className="rounded-lg w-20 sm:w-28 lg:w-[170px] h-auto dark:brightness-125" />
           </div>
           <div className="flex gap-2 sm:gap-3 items-center">
-            <Link href="/login" className="text-sm sm:text-base text-gray-600 hover:text-gray-900 px-2 sm:px-4 py-2 whitespace-nowrap">
+            <BotonTema />
+            <Link href="/login" className="text-sm sm:text-base text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-2 sm:px-4 py-2 whitespace-nowrap">
               Iniciar sesión
             </Link>
             <Link
@@ -30,10 +32,10 @@ export default function LandingPage() {
 
       <main>
         <section className="max-w-6xl mx-auto px-4 pt-16 sm:pt-24 pb-12 sm:pb-16 text-center">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight max-w-3xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight max-w-3xl mx-auto">
             Nunca más pierdas un cliente por no responder reseñas
           </h2>
-          <p className="text-base sm:text-xl text-gray-500 mt-4 sm:mt-6 max-w-2xl mx-auto">
+          <p className="text-base sm:text-xl text-gray-500 dark:text-gray-400 mt-4 sm:mt-6 max-w-2xl mx-auto">
             Respondemos automáticamente cada reseña de Google Maps con IA. Vos solo aprobás o editás.
           </p>
           <Link
@@ -47,10 +49,10 @@ export default function LandingPage() {
 
         <section className="max-w-6xl mx-auto px-4 py-12 sm:py-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {beneficios.map((b) => (
-            <div key={b.titulo} className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition">
+            <div key={b.titulo} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition">
               <div className="text-3xl mb-4">{b.icono}</div>
-              <h3 className="text-lg font-semibold text-gray-900">{b.titulo}</h3>
-              <p className="text-gray-500 mt-2">{b.descripcion}</p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{b.titulo}</h3>
+              <p className="text-gray-500 dark:text-gray-400 mt-2">{b.descripcion}</p>
             </div>
           ))}
         </section>
@@ -58,9 +60,9 @@ export default function LandingPage() {
         {/* Planes */}
         <Pricing />
 
-        <section className="bg-primary-600 text-white py-12 sm:py-20 px-4 text-center">
+        <section className="bg-primary-600 dark:bg-primary-800 text-white py-12 sm:py-20 px-4 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold">Empezá a cuidar tu reputación hoy</h2>
-          <p className="text-primary-100 mt-3 max-w-xl mx-auto text-sm sm:text-base">
+          <p className="text-primary-100 dark:text-primary-200 mt-3 max-w-xl mx-auto text-sm sm:text-base">
             Configurás tu local en 2 minutos. Nosotros nos encargamos del resto.
           </p>
           <Link
@@ -72,7 +74,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="border-t py-8 text-center text-sm text-gray-400">
+      <footer className="border-t dark:border-gray-800 py-8 text-center text-sm text-gray-400 dark:text-gray-500">
         © 2024 Replivo. Todos los derechos reservados.
       </footer>
     </div>
