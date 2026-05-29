@@ -1,11 +1,9 @@
-// ============================================================
-// Gestion de locales: agregar, listar y eliminar negocios
-// ============================================================
 "use client"
 
 import { useEffect, useState } from "react"
 import { crearClienteBrowser } from "@/lib/supabase-client"
 import { Trash2, Plus } from "lucide-react"
+import Link from "next/link"
 
 interface Local {
   id: string
@@ -23,18 +21,33 @@ export default function LocalesPage() {
   const [direccion, setDireccion] = useState("")
   const [googlePlaceId, setGooglePlaceId] = useState("")
   const [cargando, setCargando] = useState(false)
+  const [planTier, setPlanTier] = useState("gratis")
+  const [limiteInfo, setLimiteInfo] = useState({ actual: 0, maximo: 1 })
 
   const supabase = crearClienteBrowser()
 
   const cargarLocales = async () => {
     const { data } = await supabase.from("locales").select("*")
-    if (data) setLocales(data)
+    if (data) {
+      setLocales(data)
+      setLimiteInfo((prev) => ({ ...prev, actual: data.length }))
+    }
   }
 
-  useEffect(() => { cargarLocales() }, [])
+  useEffect(() => {
+    cargarLocales()
+    fetch("/api/suscripcion").then((r) => r.json()).then((data) => {
+      const tier = data.subscription?.plan_tier ?? "gratis"
+      setPlanTier(tier)
+      const maxLocales = tier === "pro" ? 10 : tier === "starter" ? 3 : 1
+      setLimiteInfo((prev) => ({ ...prev, maximo: maxLocales }))
+    })
+  }, [])
 
   const agregarLocal = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (limiteInfo.actual >= limiteInfo.maximo) return
+
     setCargando(true)
 
     const usuario = await supabase.auth.getUser()
@@ -66,20 +79,50 @@ export default function LocalesPage() {
     cargarLocales()
   }
 
+  const alLimite = limiteInfo.actual >= limiteInfo.maximo
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Mis locales</h1>
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Mis locales</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            {limiteInfo.actual}/{limiteInfo.maximo} locales usados
+            {planTier === "gratis" && (
+              <Link href="/dashboard/suscripcion" className="ml-2 text-primary-600 hover:underline">
+                Mejorar plan →
+              </Link>
+            )}
+          </p>
+        </div>
         <button
-          onClick={() => setMostrarForm(!mostrarForm)}
-          className="flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition w-full sm:w-auto"
+          onClick={() => {
+            if (alLimite) return
+            setMostrarForm(!mostrarForm)
+          }}
+          disabled={alLimite}
+          className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition w-full sm:w-auto ${
+            alLimite
+              ? "bg-gray-300 dark:bg-gray-600 text-gray-500 cursor-not-allowed"
+              : "bg-primary-600 text-white hover:bg-primary-700"
+          }`}
+          title={alLimite ? `Llegaste al límite de ${limiteInfo.maximo} locales. Mejorá tu plan para agregar más.` : ""}
         >
           <Plus className="w-4 h-4" />
           Agregar local
         </button>
       </div>
 
-      {mostrarForm && (
+      {alLimite && !mostrarForm && (
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 mb-6">
+          <p className="text-sm text-yellow-700 dark:text-yellow-300">
+            Llegaste al límite de {limiteInfo.maximo} locales.{" "}
+            <Link href="/dashboard/suscripcion" className="font-medium underline">Actualizá tu plan</Link> para agregar más.
+          </p>
+        </div>
+      )}
+
+      {mostrarForm && !alLimite && (
         <form onSubmit={agregarLocal} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 mb-8">
           <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Nuevo local</h2>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre del negocio</label>
@@ -135,7 +178,7 @@ export default function LocalesPage() {
                     <p className="text-sm text-yellow-600">★ {local.rating_actual.toFixed(1)}</p>
                   )}
                   {local.google_place_id === "pendiente" && (
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">⏳ Sin Place ID — cargá reseñas manualmente</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">⏳ Sin Place ID — cargá reseñas manualmente</p>
                   )}
                 </div>
               <button

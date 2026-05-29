@@ -13,7 +13,8 @@ export default function LandingPage() {
       <header className="border-b dark:border-gray-800">
         <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4 flex items-center justify-between gap-2">
           <div className="flex items-center gap-3 shrink-0">
-            <Image src="/logo.png" alt="Replivo" width={170} height={170} className="rounded-lg w-20 sm:w-28 lg:w-[170px] h-auto dark:brightness-125" />
+            <Image src="/logo.png" alt="Replivo" width={170} height={170} className="rounded-lg dark:hidden w-[90px] sm:w-28 lg:w-[170px] h-auto" />
+            <Image src="/logo-blanco.png" alt="Replivo" width={170} height={170} className="rounded-lg hidden dark:block w-[90px] sm:w-28 lg:w-[170px] h-auto" />
           </div>
           <div className="flex gap-2 sm:gap-3 items-center">
             <BotonTema />

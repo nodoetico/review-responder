@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { crearClienteBrowser } from "@/lib/supabase-client"
 
 const planes = [
   {
@@ -15,7 +17,6 @@ const planes = [
       "Aprobación manual",
     ],
     cta: "Empezar gratis",
-    ctaLink: "/registro",
   },
   {
     nombre: "Starter",
@@ -28,8 +29,7 @@ const planes = [
       "Escaneo automático",
       "Alertas por email",
     ],
-    cta: "Probar gratis",
-    ctaLink: "/registro",
+    cta: "Suscribirse",
   },
   {
     nombre: "Pro",
@@ -44,8 +44,7 @@ const planes = [
       "Exportación de datos",
       "Soporte prioritario",
     ],
-    cta: "Probar gratis",
-    ctaLink: "/registro",
+    cta: "Suscribirse",
   },
 ]
 
@@ -53,9 +52,12 @@ export default function Pricing() {
   const [moneda, setMoneda] = useState("USD")
   const [simbolo, setSimbolo] = useState("$")
   const [factor, setFactor] = useState(1)
+  const [logueado, setLogueado] = useState(false)
+  const [gateway, setGateway] = useState("stripe")
+  const [cargando, setCargando] = useState<string | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
-    // Detectar país por zona horaria (más preciso que navigator.language)
     let pais = "US"
     try {
       const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -68,7 +70,6 @@ export default function Pricing() {
       else if (tz.includes("Madrid") || tz.includes("Europe")) pais = "ES"
       else if (tz.includes("New_York") || tz.includes("Chicago") || tz.includes("Los_Angeles") || tz.includes("America") || tz.includes("US")) pais = "US"
       else {
-        // Fallback a navigator.language
         const lang = navigator.language || "en-US"
         const langPais = lang.split("-").pop()?.toUpperCase()
         if (langPais && langPais.length === 2) pais = langPais
@@ -79,7 +80,6 @@ export default function Pricing() {
       if (langPais && langPais.length === 2) pais = langPais
     }
 
-    // Mapeo de países a monedas
     const mapa: Record<string, { codigo: string; simbolo: string; factor: number }> = {
       AR: { codigo: "ARS", simbolo: "$", factor: 1200 },
       MX: { codigo: "MXN", simbolo: "$", factor: 20 },
@@ -97,6 +97,9 @@ export default function Pricing() {
       setSimbolo(encontrada.simbolo)
       setFactor(encontrada.factor)
     }
+
+    const supabase = crearClienteBrowser()
+    supabase.auth.getUser().then(({ data }) => setLogueado(!!data.user))
   }, [])
 
   const formatear = (precioUSD: number) => {
@@ -105,13 +108,59 @@ export default function Pricing() {
     return `${simbolo}${convertido.toLocaleString()}`
   }
 
+  const handleContratar = async (plan: string) => {
+    if (!logueado) {
+      router.push("/registro")
+      return
+    }
+    setCargando(plan)
+    try {
+      const res = await fetch(`/api/checkout/${gateway}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
+      })
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+      else alert("Error al crear checkout")
+    } catch {
+      alert("Error al conectar con la pasarela")
+    } finally {
+      setCargando(null)
+    }
+  }
+
+  const GATEWAYS = [
+    { id: "stripe", label: "Stripe" },
+    { id: "mercadopago", label: "MercadoPago" },
+    { id: "paypal", label: "PayPal" },
+  ]
+
   return (
     <section className="max-w-6xl mx-auto px-4 pb-10">
       <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 dark:text-white mb-2">Planes para cada negocio</h2>
-      <p className="text-center text-gray-500 dark:text-gray-400 mb-8 sm:mb-12 text-sm sm:text-base">
+      <p className="text-center text-gray-500 dark:text-gray-400 mb-2 text-sm sm:text-base">
         Todos los precios en {moneda}{" "}
         <span className="text-xs text-gray-400">(detectado automáticamente)</span>
       </p>
+
+      {logueado && (
+        <div className="flex justify-center gap-2 mb-8">
+          {GATEWAYS.map((g) => (
+            <button
+              key={g.id}
+              onClick={() => setGateway(g.id)}
+              className={`px-4 py-1.5 rounded-full text-xs font-medium transition border ${
+                gateway === g.id
+                  ? "bg-primary-600 text-white border-primary-600"
+                  : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-primary-300"
+              }`}
+            >
+              {g.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
         {planes.map((p) => (
@@ -147,16 +196,41 @@ export default function Pricing() {
               ))}
             </ul>
 
-            <Link
-              href={p.ctaLink}
-              className={`block text-center mt-8 py-2.5 rounded-lg font-medium transition ${
-                p.destacado
-                  ? "bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
-                  : "border border-primary-600 dark:border-primary-400 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-gray-700"
-              }`}
-            >
-              {p.cta}
-            </Link>
+            {p.precio === 0 ? (
+              <Link
+                href="/registro"
+                className={`block text-center mt-8 py-2.5 rounded-lg font-medium transition ${
+                  p.destacado
+                    ? "bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
+                    : "border border-primary-600 dark:border-primary-400 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-gray-700"
+                }`}
+              >
+                {p.cta}
+              </Link>
+            ) : logueado ? (
+              <button
+                onClick={() => handleContratar(p.nombre.toLowerCase() === "starter" ? "starter" : "pro")}
+                disabled={cargando === (p.nombre.toLowerCase())}
+                className={`block text-center mt-8 py-2.5 rounded-lg font-medium transition w-full ${
+                  p.destacado
+                    ? "bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 disabled:opacity-50"
+                    : "border border-primary-600 dark:border-primary-400 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-gray-700 disabled:opacity-50"
+                }`}
+              >
+                {cargando === (p.nombre.toLowerCase()) ? "Redirigiendo..." : p.cta}
+              </button>
+            ) : (
+              <Link
+                href="/registro"
+                className={`block text-center mt-8 py-2.5 rounded-lg font-medium transition ${
+                  p.destacado
+                    ? "bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
+                    : "border border-primary-600 dark:border-primary-400 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-gray-700"
+                }`}
+              >
+                {p.cta}
+              </Link>
+            )}
           </div>
         ))}
       </div>

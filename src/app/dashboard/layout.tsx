@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import { crearClienteBrowser } from "@/lib/supabase-client"
 import type { User } from "@supabase/supabase-js"
-import { Store, MessageSquare, Settings, LogOut, Home, Menu, X } from "lucide-react"
+import { Store, MessageSquare, Settings, LogOut, Home, Menu, X, CreditCard } from "lucide-react"
 import Image from "next/image"
 import BotonTema from "@/components/boton-tema"
 
@@ -13,6 +13,7 @@ const navItems = [
   { href: "/dashboard", label: "Inicio", icon: Home },
   { href: "/dashboard/locales", label: "Mis locales", icon: Store },
   { href: "/dashboard/resenas", label: "Reseñas", icon: MessageSquare },
+  { href: "/dashboard/suscripcion", label: "Suscripción", icon: CreditCard },
   { href: "/dashboard/configuracion", label: "Configuración", icon: Settings },
 ]
 
@@ -46,7 +47,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const Sidebar = () => (
     <aside className="bg-gray-900 dark:bg-black text-white p-6 flex flex-col h-full">
       <div className="flex items-center justify-between mb-8">
-        <Image src="/logo-blanco.png" alt="Replivo" width={140} height={140} className="rounded-lg w-20 sm:w-24 lg:w-[140px] h-auto" />
+        <Image src="/logo-blanco.png" alt="Replivo" width={140} height={140} className="rounded-lg w-[90px] sm:w-24 lg:w-[140px] h-auto" />
         <button onClick={() => setSidebarAbierta(false)} className="lg:hidden text-gray-400 hover:text-white">
           <X className="w-6 h-6" />
         </button>
@@ -102,12 +103,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <main className="flex-1 min-w-0">
         {/* Mobile top bar */}
-        <div className="lg:hidden flex items-center gap-3 bg-white dark:bg-gray-900 border-b dark:border-gray-800 px-4 py-3 sticky top-0 z-40">
-          <button onClick={() => setSidebarAbierta(true)} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+        <div className="lg:hidden grid grid-cols-3 items-center bg-white dark:bg-gray-900 border-b dark:border-gray-800 px-4 py-2 sticky top-0 z-40">
+          <button onClick={() => setSidebarAbierta(true)} className="justify-self-start text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
             <Menu className="w-6 h-6" />
           </button>
-          <Image src="/logo-blanco.png" alt="Replivo" width={40} height={40} className="rounded-lg invert dark:invert-0" />
-          <div className="ml-auto">
+          <div className="justify-self-center">
+            <Image src="/logo.png" alt="Replivo" width={82} height={82} className="rounded-lg w-[82px] h-auto dark:hidden" />
+            <Image src="/logo-blanco.png" alt="Replivo" width={82} height={82} className="rounded-lg w-[82px] h-auto hidden dark:block" />
+          </div>
+          <div className="justify-self-end">
             <BotonTema />
           </div>
         </div>

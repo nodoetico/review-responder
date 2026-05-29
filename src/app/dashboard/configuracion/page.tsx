@@ -50,13 +50,14 @@ export default function ConfiguracionPage() {
           className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 mb-6 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
         />
 
-        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contraseña</label>
         <input
-          type="email"
-          value={email}
+          type="password"
+          value="∙∙∙∙∙∙∙∙"
           disabled
-          className="w-full border rounded-lg px-3 py-2 mb-6 bg-gray-50 text-gray-500"
+          className="w-full border dark:border-gray-600 rounded-lg px-3 py-2 mb-2 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
         />
+        <p className="text-xs text-gray-400 dark:text-gray-500 mb-6">La contraseña no se muestra por seguridad.</p>
 
         <button
           onClick={guardar}
